@@ -4,11 +4,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using ScottGarland;
 
-
-
 /// <summary>
-/// Å¬¸¯ ÀÌº¥Æ®¸¦ ¹Ş¾Æ ÄÚÀÎÀ» Áõ°¡½ÃÅ°´Â ÄÁÆ®·Ñ·¯
-/// Auto Clicker¿Í Clicker¸¦ ±¸ºĞÇÏ¿© ÄÚÀÎÀ» Áõ°¡½ÃÅ²´Ù.
+/// í´ë¦­ ì´ë²¤íŠ¸ë¥¼ ë°›ì•„ ì½”ì¸ì„ ì¦ê°€ì‹œí‚¤ëŠ” ì»¨íŠ¸ë¡¤ëŸ¬
+/// Auto Clickerì™€ Clickerë¥¼ êµ¬ë¶„í•˜ì—¬ ì½”ì¸ì„ ì¦ê°€ì‹œí‚¨ë‹¤.
 /// </summary>
 public class CoinController : MonoBehaviour
 {
@@ -17,8 +15,6 @@ public class CoinController : MonoBehaviour
     private BigInteger perClickCost = 1;
     private BigInteger perAutoClickValue = 1;
     private BigInteger perAutoClickCost = 1;
-
-    [SerializeField] private UIScene_ClickHandler clickHandler;
 
     public BigInteger Value => value;
     public BigInteger PerClickValue => perClickValue;
@@ -30,15 +26,10 @@ public class CoinController : MonoBehaviour
 
     private void Start()
     {
-        clickHandler = FindObjectOfType<UIScene_ClickHandler>();
-
-        clickHandler.OnClickerClickEvent -= OnClickerClickEvent;
-        clickHandler.OnClickerClickEvent += OnClickerClickEvent;
-
         StartCoroutine(AutoClickCoroutine());
     }
 
-    private void OnClickerClickEvent()
+    public void OnClickerClickEvent()
     {
         value += perClickValue;
         OnCoinChanged?.Invoke();

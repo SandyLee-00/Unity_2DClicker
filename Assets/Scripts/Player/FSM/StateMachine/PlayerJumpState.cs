@@ -1,4 +1,4 @@
-﻿public class PlayerJumpState : PlayerAirState
+public class PlayerJumpState : PlayerAirState
 {
     public PlayerJumpState(PlayerStateMachine stateMachine) : base(stateMachine)
     {
@@ -6,7 +6,6 @@
 
     public override void Enter()
     {
-        stateMachine.JumpForce = stateMachine.Player.Data.AirData.JumpForce;
         stateMachine.Player.ForceReceiver.Jump(stateMachine.JumpForce);
 
         base.Enter();

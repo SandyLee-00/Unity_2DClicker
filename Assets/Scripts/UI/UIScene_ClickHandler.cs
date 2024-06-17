@@ -17,6 +17,6 @@ public class UIScene_ClickHandler : MonoBehaviour
 
     private void OnClick()
     {
-        OnClickerClickEvent?.Invoke();
+        GameManager.Instance.Coin.OnClickerClickEvent();
     }
 }
