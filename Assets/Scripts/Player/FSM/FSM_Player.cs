@@ -4,20 +4,14 @@ using UnityEngine;
 
 public class FSM_Player : MonoBehaviour
 {
-    [field: Header("Reference")]
-    [field: SerializeField] public ChasingSO Data { get; private set; }
-    
     [field: Header("Animations")]
     [field: SerializeField] public PlayerAnimationData AnimationData { get; private set; }
-    [field: SerializeField] public Weapon Weapon { get; private set; }
+    [field: SerializeField] public PlayerData Data { get; private set; }
 
-    public Rigidbody Rigidbody { get; private set; }
     public Animator Animator { get; private set; }
-    public CharacterController Controller { get; private set; }
-    private EnemyStateMachine stateMachine;
+    public BoxCollider2D BoxCollider2D { get; private set; }
 
-    public ForceReceiver ForceReceiver { get; private set; }
-
+    private PlayerStateMachine stateMachine;
 
     private void Awake()
     {
@@ -25,17 +19,13 @@ public class FSM_Player : MonoBehaviour
         AnimationData.Initialize();
 
         Animator = GetComponentInChildren<Animator>();
-        Controller = GetComponent<CharacterController>();
-        ForceReceiver = GetComponent<ForceReceiver>();
+        BoxCollider2D = GetComponent<BoxCollider2D>();
 
-        stateMachine = new EnemyStateMachine(this);
-
-        Weapon = GetComponentInChildren<Weapon>();
+        stateMachine = new PlayerStateMachine(this);
     }
 
     private void Start()
     {
-        Cursor.lockState = CursorLockMode.Locked;
         stateMachine.ChangeState(stateMachine.IdleState);
     }
 
@@ -47,6 +37,40 @@ public class FSM_Player : MonoBehaviour
 
     private void FixedUpdate()
     {
-        stateMachine.PhysicsUpdate();
+        stateMachine.FixedUpdate();
     }
+}
+
+[SerializeField]
+public class PlayerAnimationData
+{
+    [SerializeField] private string groundParameterName = "@Ground";
+    [SerializeField] private string idleParameterName = "Idle";
+    [SerializeField] private string walkParameterName = "Walk";
+
+    [SerializeField] private string attackParameterName = "@Attack";
+    [SerializeField] private string baseAttackParameterName = "BaseAttack";
+
+    public int GroundParameterHash { get; private set; }
+    public int IdleParameterHash { get; private set; }
+    public int WalkParameterHash { get; private set; }
+    public int AttackParameterHash { get; private set; }
+    public int BaseAttackParameterHash { get; private set; }
+
+    public void Initialize()
+    {
+        GroundParameterHash = Animator.StringToHash(groundParameterName);
+        IdleParameterHash = Animator.StringToHash(idleParameterName);
+        WalkParameterHash = Animator.StringToHash(walkParameterName);
+        AttackParameterHash = Animator.StringToHash(attackParameterName);
+        BaseAttackParameterHash = Animator.StringToHash(baseAttackParameterName);
+    }
+}
+
+[SerializeField]
+public class PlayerData
+{
+    [SerializeField] public float PlayerChasingRange { get; private set; } = 7.0f;
+    [SerializeField] public float BaseSpeed { get; private set; } = 5.0f;
+    [SerializeField] public float AttackRange { get; private set; } = 2.0f;
 }
