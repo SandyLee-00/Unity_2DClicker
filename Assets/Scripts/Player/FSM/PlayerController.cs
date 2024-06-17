@@ -16,7 +16,6 @@ public class PlayerController : MonoBehaviour
     private void OnEnable()
     {
         playerInputs.Enable();
-        /*Debug.Log($"PlayerController::OnEnable()")*/
 ;    }
 
     private void OnDisable()
