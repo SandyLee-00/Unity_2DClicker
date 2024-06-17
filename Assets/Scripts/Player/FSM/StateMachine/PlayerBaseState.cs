@@ -1,97 +1,35 @@
-﻿using UnityEngine;
-using UnityEngine.InputSystem;
+using UnityEngine;
 
 public class PlayerBaseState : IState
 {
-    protected PlayerStateMachine stateMachine;
+    protected EnemyStateMachine stateMachine;
     protected readonly PlayerGroundData groundData;
 
-    public PlayerBaseState(PlayerStateMachine stateMachine)
+    public PlayerBaseState(EnemyStateMachine playerStateMachine)
     {
-        this.stateMachine = stateMachine;
-        groundData = stateMachine.Player.Data.GroundData;
+        stateMachine = playerStateMachine;
+        groundData = stateMachine.Enemy.Data.GroundData;
     }
 
     public virtual void Enter()
     {
-        AddInputActionsCallbacks();
     }
 
     public virtual void Exit()
     {
-        RemoveInputActionsCallbacks();
-    }
-
-    protected virtual void AddInputActionsCallbacks()
-    {
-        PlayerController input = stateMachine.Player.Input;
-        input.playerActions.Movement.canceled += OnMovementCanceled;
-        input.playerActions.Run.started += OnRunStarted;
-        input.playerActions.Jump.started += OnJumpStarted;
-        stateMachine.Player.Input.playerActions.Attack.performed += OnAttackPerformed;
-        stateMachine.Player.Input.playerActions.Attack.canceled += OnAttackCanceled;
-    }
-
-    protected virtual void RemoveInputActionsCallbacks()
-    {
-        PlayerController input = stateMachine.Player.Input;
-        input.playerActions.Movement.canceled -= OnMovementCanceled;
-        input.playerActions.Run.started -= OnRunStarted;
-        input.playerActions.Jump.started -= OnJumpStarted;
-        stateMachine.Player.Input.playerActions.Attack.performed -= OnAttackPerformed;
-        stateMachine.Player.Input.playerActions.Attack.canceled -= OnAttackCanceled;
-    }
-
-    protected virtual void OnRunStarted(InputAction.CallbackContext context)
-    {
-    }
-
-    protected virtual void OnMovementCanceled(InputAction.CallbackContext context)
-    {
-    }
-
-    protected virtual void OnJumpStarted(InputAction.CallbackContext context)
-    {
-    }
-
-    protected virtual void OnAttackPerformed(InputAction.CallbackContext obj)
-    {
-        stateMachine.IsAttacking = true;
-    }
-
-    protected virtual void OnAttackCanceled(InputAction.CallbackContext obj)
-    {
-        stateMachine.IsAttacking = false;
     }
 
     public virtual void HandleInput()
     {
-        ReadMovementInput();
     }
 
     public virtual void PhysicsUpdate()
     {
-
     }
 
     public virtual void Update()
     {
         Move();
-    }
-
-    protected void StartAnimation(int animationHash)
-    {
-        stateMachine.Player.Animator.SetBool(animationHash, true);
-    }
-
-    protected void StopAnimation(int animationHash)
-    {
-        stateMachine.Player.Animator.SetBool(animationHash, false);
-    }
-
-    private void ReadMovementInput()
-    {
-        stateMachine.MovementInput = stateMachine.Player.Input.playerActions.Movement.ReadValue<Vector2>();
     }
 
     private void Move()
@@ -103,33 +41,29 @@ public class PlayerBaseState : IState
         Move(movementDirection);
     }
 
+    protected void ForceMove()
+    {
+        stateMachine.Enemy.Controller.Move(stateMachine.Enemy.ForceReceiver.Movement * Time.deltaTime);
+    }
+
     private Vector3 GetMovementDirection()
     {
-        Vector3 forward = stateMachine.MainCamTransform.forward;
-        Vector3 right = stateMachine.MainCamTransform.right;
-
-        forward.y = 0;
-        right.y = 0;
-
-        forward.Normalize();
-        right.Normalize();
-
-        return forward * stateMachine.MovementInput.y + right * stateMachine.MovementInput.x;
+        Vector3 dir = (stateMachine.Target.transform.position - stateMachine.Enemy.transform.position).normalized;
+        return dir;
     }
 
-    private void Move(Vector3 direction)
+    void Move(Vector3 movementDirection)
     {
         float movementSpeed = GetMovementSpeed();
-        stateMachine.Player.Controller.Move((direction * movementSpeed + stateMachine.Player.ForceReceiver.Movement) * Time.deltaTime);
+        stateMachine.Enemy.Controller.Move(((movementDirection * movementSpeed) + stateMachine.Enemy.ForceReceiver.Movement) * Time.deltaTime);
     }
 
-    private void Rotate(Vector3 direction)
+    void Rotate(Vector3 movementDirection)
     {
-        if (direction != Vector3.zero)
+        if (movementDirection != Vector3.zero)
         {
-            Transform playerTransform = stateMachine.Player.transform;
-            Quaternion targetRotation = Quaternion.LookRotation(direction);
-            playerTransform.rotation = Quaternion.Slerp(playerTransform.rotation, targetRotation, stateMachine.RotationDamping * Time.deltaTime);
+            Quaternion targetRotation = Quaternion.LookRotation(movementDirection);
+            stateMachine.Enemy.transform.rotation = Quaternion.Lerp(stateMachine.Enemy.transform.rotation, targetRotation, stateMachine.RotationDamping * Time.deltaTime);
         }
     }
 
@@ -139,12 +73,16 @@ public class PlayerBaseState : IState
         return movementSpeed;
     }
 
-    /// <summary>
-    /// 애니메이션 
-    /// </summary>
-    /// <param prefabName="animator"></param>
-    /// <param prefabName="tag"></param>
-    /// <returns></returns>
+    protected void StartAnimation(int animationHash)
+    {
+        stateMachine.Enemy.Animator.SetBool(animationHash, true);
+    }
+
+    protected void StopAnimation(int animationHash)
+    {
+        stateMachine.Enemy.Animator.SetBool(animationHash, false);
+    }
+
     protected float GetNormalizedTime(Animator animator, string tag)
     {
         AnimatorStateInfo currentInfo = animator.GetCurrentAnimatorStateInfo(0);
@@ -164,8 +102,12 @@ public class PlayerBaseState : IState
         }
     }
 
-    protected void ForceMove()
+    protected bool IsInChasingRange()
     {
-        stateMachine.Player.Controller.Move(stateMachine.Player.ForceReceiver.Movement * Time.deltaTime);
+        if(stateMachine.Target.IsDead) return false;
+
+        float playerDistanceSqr = (stateMachine.Target.transform.position - stateMachine.Enemy.transform.position).sqrMagnitude;
+
+        return playerDistanceSqr <= stateMachine.Enemy.Data.ChasingRange * stateMachine.Enemy.Data.ChasingRange;
     }
 }
