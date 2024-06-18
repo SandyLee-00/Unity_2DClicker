@@ -44,17 +44,6 @@ public class PlayerChasingState : PlayerBaseState
         UpdateRotataion();
     }
 
-    private void UpdateMove()
-    {
-        stateMachine.MovementDirection = (stateMachine.Target.transform.position - stateMachine.Player.transform.position).normalized;
-        stateMachine.Player.transform.position += stateMachine.MovementDirection * stateMachine.Player.Data.BaseSpeed * Time.deltaTime;
-    }
-
-    private void UpdateRotataion()
-    {
-        stateMachine.Player.AimRotation.RotateSprite(stateMachine.MovementDirection);
-    }
-
     protected bool IsInAttackRange()
     {
         float playerDistanceSqr = (stateMachine.Target.transform.position - stateMachine.Player.transform.position).sqrMagnitude;

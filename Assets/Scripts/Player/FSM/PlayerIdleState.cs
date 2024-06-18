@@ -120,4 +120,15 @@ public class PlayerBaseState : IState
 
         return playerDistanceSqr <= stateMachine.Player.Data.PlayerChasingRange * stateMachine.Player.Data.PlayerChasingRange;
     }
+
+    protected void UpdateRotataion()
+    {
+        stateMachine.Player.AimRotation.RotateSprite(stateMachine.MovementDirection);
+    }
+
+    protected void UpdateMove()
+    {
+        stateMachine.MovementDirection = (stateMachine.Target.transform.position - stateMachine.Player.transform.position).normalized;
+        stateMachine.Player.transform.position += stateMachine.MovementDirection * stateMachine.Player.Data.BaseSpeed * Time.deltaTime;
+    }
 }

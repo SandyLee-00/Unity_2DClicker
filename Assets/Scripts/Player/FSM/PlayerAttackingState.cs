@@ -4,6 +4,9 @@ using UnityEngine.UIElements;
 
 public class PlayerAttackingState : PlayerBaseState
 {
+    private float attackTime = 0.5f;
+    private float currentAttackTime = 0f;
+
     public PlayerAttackingState(PlayerStateMachine stateMachine) : base(stateMachine)
     {
     }
@@ -15,8 +18,6 @@ public class PlayerAttackingState : PlayerBaseState
 
         StartAnimation(stateMachine.Player.AnimationData.AttackParameterHash);
         StartAnimation(stateMachine.Player.AnimationData.BaseAttackParameterHash);
-
-        stateMachine.Player.StartCoroutine(ShootArrowRoutine());
     }
 
     public override void Exit()
@@ -26,13 +27,13 @@ public class PlayerAttackingState : PlayerBaseState
 
         StopAnimation(stateMachine.Player.AnimationData.AttackParameterHash);
         StopAnimation(stateMachine.Player.AnimationData.BaseAttackParameterHash);
-
-        stateMachine.Player.StopCoroutine(ShootArrowRoutine());
     }
 
     public override void Update()
     {
         base.Update();
+
+        UpdateRotataion();
 
         float normalizedTime = GetNormalizedTime(stateMachine.Player.Animator, "Attack");
         Debug.Log($"normalizedTime : {normalizedTime}");
@@ -40,6 +41,13 @@ public class PlayerAttackingState : PlayerBaseState
         // 공격 애니메이션 중
         if (normalizedTime < 1f)
         {
+            // 공격 시간 체크
+            currentAttackTime += Time.deltaTime;
+            if (currentAttackTime >= attackTime)
+            {
+                currentAttackTime = 0f;
+                CreateProjectile();
+            }
         }
 
         // 공격 애니메이션 끝
@@ -66,7 +74,7 @@ public class PlayerAttackingState : PlayerBaseState
         GameObject obj = GameManager.Instance.ObjectPool.SpawnFromPool("Arrow");
 
         // 발사체 기본 세팅
-        obj.transform.position = stateMachine.Player.transform.position + Vector3.up * 0.5f;
+        obj.transform.position = stateMachine.Player.transform.position;
         ProjectileController attackController = obj.GetComponent<ProjectileController>();
         attackController.InitializeAttack(RotateVector2(stateMachine.MovementDirection, 0));
 
@@ -76,16 +84,6 @@ public class PlayerAttackingState : PlayerBaseState
     private static Vector2 RotateVector2(Vector2 v, float degree)
     {
         return Quaternion.Euler(0, 0, degree) * v;
-    }
-
-    // 1초에 한번 씩 코루틴으로 화살 생성
-    private IEnumerator ShootArrowRoutine()
-    {
-        while (true)
-        {
-            CreateProjectile();
-            yield return new WaitForSeconds(1f);
-        }
     }
 
 }
