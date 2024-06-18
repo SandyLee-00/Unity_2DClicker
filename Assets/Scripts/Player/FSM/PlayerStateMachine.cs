@@ -41,6 +41,7 @@ public class PlayerStateMachine : StateMachine
 {
     public FSM_Player Player { get; private set; }
     public GameObject Target { get; private set; }
+    public Vector3 MovementDirection { get; set; }
 
     public PlayerIdleState IdleState { get; }
     public PlayerChasingState ChasingState { get; }
@@ -53,8 +54,20 @@ public class PlayerStateMachine : StateMachine
         IdleState = new PlayerIdleState(this);
         ChasingState = new PlayerChasingState(this);
         AttackingState = new PlayerAttackingState(this);
+
+        Target = FindTarget();
     }
 
-    // TODO : Target 찾아서 넣어주기
+    public GameObject FindTarget()
+    {
+        Target = GameObject.FindGameObjectWithTag(Define.ENEMY_TAG);
+        if(Target == null)
+        {
+            Debug.Log($"PlayerStateMachine::FindTarget() Target is null");
+            return null;
+        }
 
+        Debug.Log($"Target : {Target.name}");
+        return Target;
+    }
 }

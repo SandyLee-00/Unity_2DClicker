@@ -10,6 +10,7 @@ public class FSM_Player : MonoBehaviour
 
     public Animator Animator { get; private set; }
     public BoxCollider2D BoxCollider2D { get; private set; }
+    public PlayerAimRotation AimRotation { get; private set; }
 
     private PlayerStateMachine stateMachine;
 
@@ -17,9 +18,11 @@ public class FSM_Player : MonoBehaviour
     {
         AnimationData = new PlayerAnimationData();
         AnimationData.Initialize();
+        Data = new PlayerData();
 
         Animator = GetComponentInChildren<Animator>();
         BoxCollider2D = GetComponent<BoxCollider2D>();
+        AimRotation = GetComponent<PlayerAimRotation>();
 
         stateMachine = new PlayerStateMachine(this);
     }
@@ -72,5 +75,5 @@ public class PlayerData
 {
     [SerializeField] public float PlayerChasingRange { get; private set; } = 7.0f;
     [SerializeField] public float BaseSpeed { get; private set; } = 5.0f;
-    [SerializeField] public float AttackRange { get; private set; } = 2.0f;
+    [SerializeField] public float AttackRange { get; private set; } = 3.0f;
 }

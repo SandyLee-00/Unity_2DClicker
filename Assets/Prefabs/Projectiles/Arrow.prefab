@@ -320,4 +320,5 @@ MonoBehaviour:
   levelCollisionLayer:
     serializedVersion: 2
     m_Bits: 128
+  _attackData: {fileID: 11400000, guid: 4a2206d7ff2ca29428534b9ed0a93b98, type: 2}
   fxOnDestory: 1

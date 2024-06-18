@@ -279,7 +279,7 @@ GameObject:
   - component: {fileID: 7685159535614588425}
   - component: {fileID: 4319662652888628901}
   - component: {fileID: 421508474236793397}
-  - component: {fileID: 8348661293826762878}
+  - component: {fileID: 5678363467032971464}
   m_Layer: 5
   m_Name: UIPopup_GameOver
   m_TagString: Untagged
@@ -373,7 +373,7 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!114 &8348661293826762878
+--- !u!114 &5678363467032971464
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -382,7 +382,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 6230161185227885680}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d8d5b1fa105d2f34abf80631860e0334, type: 3}
+  m_Script: {fileID: 11500000, guid: 6cbcbbf0e42d4e3449db5cb600f3206f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   Retry_Button: {fileID: 5927884814171037628}

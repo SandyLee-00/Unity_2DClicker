@@ -5,7 +5,6 @@ public class PlayerIdleState : PlayerBaseState
     public PlayerIdleState(PlayerStateMachine playerStateMachine) : base(playerStateMachine)
     {
     }
-
     public override void Enter()
     {
         Debug.Log("PlayerIdleState::Enter()");
@@ -104,6 +103,19 @@ public class PlayerBaseState : IState
 
     protected bool IsInChasingRange()
     {
+        if(stateMachine.Target == null)
+        {
+            Debug.Log($"PlayerBaseState::IsInChasingRange() : Target is null");
+
+            stateMachine.FindTarget();
+            if(stateMachine.Target == null)
+            {
+                stateMachine.ChangeState(stateMachine.IdleState);
+            }
+
+            return false;
+        }
+
         float playerDistanceSqr = (stateMachine.Target.transform.position - stateMachine.Player.transform.position).sqrMagnitude;
 
         return playerDistanceSqr <= stateMachine.Player.Data.PlayerChasingRange * stateMachine.Player.Data.PlayerChasingRange;

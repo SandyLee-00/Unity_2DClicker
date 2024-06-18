@@ -5,7 +5,7 @@ public class ProjectileController : MonoBehaviour
     // 원거리 공격 발사체
     [SerializeField] private LayerMask levelCollisionLayer;
 
-    private RangedAttackSO _attackData;
+    [SerializeField] private RangedAttackSO _attackData;
     private float _currentDuration;
     private Vector2 _direction;
     private bool _isReady;
@@ -21,6 +21,7 @@ public class ProjectileController : MonoBehaviour
         _spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         _rigidbody = GetComponent<Rigidbody2D>();
         _trailRenderer = GetComponent<TrailRenderer>();
+
     }
 
     private void Update()
@@ -95,6 +96,20 @@ public class ProjectileController : MonoBehaviour
         _trailRenderer.Clear();
         _currentDuration = 0;
         _spriteRenderer.color = attackData.projectileColor;
+
+        transform.right = _direction;
+
+        _isReady = true;
+    }
+
+    public void InitializeAttack(Vector2 direction)
+    {
+        _direction = direction;
+
+        _trailRenderer.Clear();
+        _currentDuration = 0;
+        
+        _spriteRenderer.color = Color.white;
 
         transform.right = _direction;
 

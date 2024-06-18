@@ -1,33 +1,13 @@
 using UnityEngine;
 
-public class TopDownAimRotation : MonoBehaviour
+public class PlayerAimRotation : MonoBehaviour
 {
     [SerializeField] private SpriteRenderer armRenderer;
     [SerializeField] private Transform armPivot;
 
     [SerializeField] private SpriteRenderer characterRenderer;
 
-    private TopDownController _controller;
-
-    private void Awake()
-    {
-        _controller = GetComponent<TopDownController>();
-    }
-
-    void Start()
-    {
-        // 마우스의 위치가 들어오는 OnLookEvent에 등록하는 것
-        // 마우스의 위치를 받아서 팔을 돌리는 데 활용할 것임.
-        _controller.OnLookEvent += OnAim;
-    }
-
-    public void OnAim(Vector2 newAimDirection)
-    {
-        // OnLook
-        RotateArm(newAimDirection);
-    }
-
-    private void RotateArm(Vector2 direction)
+    public void RotateSprite(Vector2 direction)
     {
         // Atan2는 직각삼각형이 있다고 할 때 세로가 y, 가로가 x일 때 그 각도를 라디안 [-Pi,Pi]로 나타내는 함수임
         // 라디안의 -Pi는 -180도, Pi는 180도 이므로 Mathf.Rad2Deg는 약 57.29임 (180 / 3.14)
@@ -39,7 +19,7 @@ public class TopDownAimRotation : MonoBehaviour
         characterRenderer.flipX = Mathf.Abs(rotZ) > 90f;
         // 플레이어 무기는 상하대칭이라 괜찮았지만 샤먼 무기는 상하대칭이 아니라 뒤집어줘야함.
         armRenderer.flipY = characterRenderer.flipX;
-        
+
         // [2. 팔 돌리기]
         // 팔을 돌릴 때는 나온 각도를 그대로 적용하는데, 이때 유니티 내부에서 사용하는 쿼터니언으로 변환한다.
         // 쿼터니언으로 변형하는 방법 두 가지

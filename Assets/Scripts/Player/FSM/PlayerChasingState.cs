@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class PlayerChasingState : PlayerBaseState
 {
@@ -9,6 +10,7 @@ public class PlayerChasingState : PlayerBaseState
 
     public override void Enter()
     {
+        Debug.Log("PlayerChasingState::Enter()");
         base.Enter();
         StartAnimation(stateMachine.Player.AnimationData.GroundParameterHash);
         StartAnimation(stateMachine.Player.AnimationData.WalkParameterHash);
@@ -16,6 +18,7 @@ public class PlayerChasingState : PlayerBaseState
 
     public override void Exit()
     {
+        Debug.Log("PlayerChasingState::Exit()");
         base.Exit();
         StopAnimation(stateMachine.Player.AnimationData.GroundParameterHash);
         StopAnimation(stateMachine.Player.AnimationData.WalkParameterHash);
@@ -38,13 +41,18 @@ public class PlayerChasingState : PlayerBaseState
         }
 
         UpdateMove();
+        UpdateRotataion();
     }
 
     private void UpdateMove()
     {
-        Vector3 movementDirection = GetMovementDirection();
+        stateMachine.MovementDirection = (stateMachine.Target.transform.position - stateMachine.Player.transform.position).normalized;
+        stateMachine.Player.transform.position += stateMachine.MovementDirection * stateMachine.Player.Data.BaseSpeed * Time.deltaTime;
+    }
 
-        stateMachine.Player.transform.position += movementDirection * stateMachine.Player.Data.BaseSpeed * Time.deltaTime;
+    private void UpdateRotataion()
+    {
+        stateMachine.Player.AimRotation.RotateSprite(stateMachine.MovementDirection);
     }
 
     protected bool IsInAttackRange()
@@ -52,11 +60,5 @@ public class PlayerChasingState : PlayerBaseState
         float playerDistanceSqr = (stateMachine.Target.transform.position - stateMachine.Player.transform.position).sqrMagnitude;
 
         return playerDistanceSqr <= stateMachine.Player.Data.AttackRange * stateMachine.Player.Data.AttackRange;
-    }
-
-    private Vector3 GetMovementDirection()
-    {
-        Vector3 dir = (stateMachine.Target.transform.position - stateMachine.Player.transform.position).normalized;
-        return dir;
     }
 }
