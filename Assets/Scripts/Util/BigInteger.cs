@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 /** Based on BigInteger.cs by ScottGarland from http://biginteger.codeplex.com/ */
@@ -1637,6 +1637,9 @@ namespace ScottGarland
 			}
 			return System.UInt64.Parse(value.ToString(), System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.CurrentCulture);
 		}
-		#endregion
-	}
+        #endregion
+
+
+       
+    }
 }

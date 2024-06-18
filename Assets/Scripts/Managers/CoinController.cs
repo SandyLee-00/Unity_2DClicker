@@ -10,7 +10,7 @@ using ScottGarland;
 /// </summary>
 public class CoinController : MonoBehaviour
 {
-    private BigInteger value = 0;
+    private BigInteger value = new BigInteger("123456789012345678901234567890");
     private BigInteger perClickValue = 1;
     private BigInteger perClickCost = 1;
     private BigInteger perAutoClickValue = 1;
@@ -64,5 +64,4 @@ public class CoinController : MonoBehaviour
             perAutoClickCost *= 2;
         }
     }
-
 }

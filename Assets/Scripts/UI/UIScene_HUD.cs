@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
-/// Ã¼·Â¹Ù, ¿şÀÌºê Ç¥½Ã, ÄÚÀÎ Ç¥½Ã¸¦ ´ã´çÇÏ´Â UI
+/// ì²´ë ¥ë°”, ì›¨ì´ë¸Œ í‘œì‹œ, ì½”ì¸ í‘œì‹œë¥¼ ë‹´ë‹¹í•˜ëŠ” UI
 /// </summary>
 public class UIScene_HUD : MonoBehaviour
 {
