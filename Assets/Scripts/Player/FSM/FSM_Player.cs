@@ -43,37 +43,3 @@ public class FSM_Player : MonoBehaviour
         stateMachine.FixedUpdate();
     }
 }
-
-[SerializeField]
-public class PlayerAnimationData
-{
-    [SerializeField] private string groundParameterName = "@Ground";
-    [SerializeField] private string idleParameterName = "Idle";
-    [SerializeField] private string walkParameterName = "Walk";
-
-    [SerializeField] private string attackParameterName = "@Attack";
-    [SerializeField] private string baseAttackParameterName = "BaseAttack";
-
-    public int GroundParameterHash { get; private set; }
-    public int IdleParameterHash { get; private set; }
-    public int WalkParameterHash { get; private set; }
-    public int AttackParameterHash { get; private set; }
-    public int BaseAttackParameterHash { get; private set; }
-
-    public void Initialize()
-    {
-        GroundParameterHash = Animator.StringToHash(groundParameterName);
-        IdleParameterHash = Animator.StringToHash(idleParameterName);
-        WalkParameterHash = Animator.StringToHash(walkParameterName);
-        AttackParameterHash = Animator.StringToHash(attackParameterName);
-        BaseAttackParameterHash = Animator.StringToHash(baseAttackParameterName);
-    }
-}
-
-[SerializeField]
-public class PlayerData
-{
-    [SerializeField] public float PlayerChasingRange { get; private set; } = 10.0f;
-    [SerializeField] public float BaseSpeed { get; private set; } = 5.0f;
-    [SerializeField] public float AttackRange { get; private set; } = 3.0f;
-}

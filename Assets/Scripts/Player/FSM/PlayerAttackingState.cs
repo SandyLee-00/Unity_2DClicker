@@ -4,7 +4,7 @@ using UnityEngine.UIElements;
 
 public class PlayerAttackingState : PlayerBaseState
 {
-    private float attackTime = 0.5f;
+    private float attackTime = 1f;
     private float currentAttackTime = 0f;
 
     public PlayerAttackingState(PlayerStateMachine stateMachine) : base(stateMachine)
@@ -33,6 +33,7 @@ public class PlayerAttackingState : PlayerBaseState
     {
         base.Update();
 
+        UpdateDirection();
         UpdateRotataion();
 
         float normalizedTime = GetNormalizedTime(stateMachine.Player.Animator, "Attack");

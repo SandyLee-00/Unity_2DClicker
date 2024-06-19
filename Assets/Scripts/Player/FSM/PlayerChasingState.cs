@@ -40,8 +40,9 @@ public class PlayerChasingState : PlayerBaseState
             return;
         }
 
-        UpdateMove();
+        UpdateDirection();
         UpdateRotataion();
+        UpdateMove();
     }
 
     protected bool IsInAttackRange()
